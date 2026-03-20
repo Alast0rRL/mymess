@@ -6,6 +6,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from werkzeug.utils import secure_filename
 from werkzeug.middleware.proxy_fix import ProxyFix
 from flask_wtf.csrf import CSRFProtect
+from flask_migrate import Migrate
 from config import Config
 from models import db, Post
 from auth import check_password, login_required, is_admin
@@ -113,6 +114,10 @@ def create_app(config_class=Config):
     # Инициализация CSRF защиты
     csrf = CSRFProtect()
     csrf.init_app(app)
+    
+    # Инициализация миграций
+    migrate = Migrate()
+    migrate.init_app(app, db)
     
     # Whitelist для HTMX запросов
     @app.before_request

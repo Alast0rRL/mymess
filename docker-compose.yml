@@ -1,0 +1,68 @@
+version: '3.8'
+
+services:
+  # PostgreSQL база данных
+  db:
+    image: postgres:15-alpine
+    container_name: freedom_stream_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: freedom_stream
+      POSTGRES_USER: freedom
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-freedom_secret_password}
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U freedom -d freedom_stream"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Flask приложение
+  web:
+    build: .
+    container_name: freedom_stream_web
+    restart: unless-stopped
+    ports:
+      - "8010:8010"
+    environment:
+      DATABASE_URL: postgresql://freedom:${DB_PASSWORD:-freedom_secret_password}@db:5432/freedom_stream
+      SECRET_KEY: ${SECRET_KEY:-change-this-in-production}
+      ADMIN_PASSWORD_HASH: ${ADMIN_PASSWORD_HASH}
+      FLASK_DEBUG: "False"
+      LOG_LEVEL: INFO
+    volumes:
+      - uploads_data:/app/static/uploads
+      - logs_data:/app/logs
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >
+      sh -c "python -c 'from flask_migrate import upgrade; from app import create_app, db; app = create_app(); app.app_context().push(); upgrade()' &&
+             gunicorn --workers 4 --bind 0.0.0.0:8010 --access-logfile - --error-logfile - wsgi:app"
+
+  # Nginx reverse proxy (опционально)
+  nginx:
+    image: nginx:alpine
+    container_name: freedom_stream_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - uploads_data:/app/static/uploads:ro
+    depends_on:
+      - web
+
+volumes:
+  postgres_data:
+    driver: local
+  uploads_data:
+    driver: local
+  logs_data:
+    driver: local
+
+networks:
+  default:
+    name: freedom_stream_network
