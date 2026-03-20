@@ -2,6 +2,7 @@ import os
 import re
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from werkzeug.utils import secure_filename
+from werkzeug.middleware.proxy_fix import ProxyFix
 from config import Config
 from models import db, Post
 from auth import check_password, login_required, is_admin
@@ -10,6 +11,7 @@ from auth import check_password, login_required, is_admin
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
     
     db.init_app(app)
     
