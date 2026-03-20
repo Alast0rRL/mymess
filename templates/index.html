@@ -3,42 +3,36 @@
 {% block content %}
 <!-- Форма создания поста (только для админа) -->
 {% if is_admin %}
-<div class="glass-card p-6 mb-8 animate-fade-in tech-lines">
-    <h2 class="text-xl font-bold mb-6 text-orange-500 flex items-center gap-3 font-mono">
-        <span class="text-2xl">⚙️</span>
-        <span>[NEW_POST_MODULE]</span>
+<div class="glass-card p-6 mb-8 animate-fade-in">
+    <h2 class="text-xl font-semibold mb-6 text-gray-800 flex items-center gap-2">
+        <span class="text-2xl">📝</span>
+        <span>Новая публикация</span>
     </h2>
     
     <form action="{{ url_for('create_post') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
         <!-- Выбор типа поста -->
         <div>
-            <label class="block text-xs font-mono text-gray-500 mb-3">>> SELECT_PUBLICATION_TYPE</label>
+            <label class="block text-sm font-medium text-gray-700 mb-3">Тип публикации</label>
             <div class="flex flex-wrap gap-3">
                 <label class="cursor-pointer">
                     <input type="radio" name="type" value="text" checked class="peer sr-only" onchange="toggleFileInput()">
-                    <span class="inline-flex items-center gap-2 px-5 py-3 font-mono text-xs border border-gray-700 bg-black/50 
-                        peer-checked:bg-orange-900/30 peer-checked:border-orange-500 peer-checked:text-orange-400
-                        transition-all hover:border-gray-500 hover:bg-gray-900">
+                    <span class="radio-card">
                         <span>📄</span>
-                        <span>TEXT</span>
+                        <span>Текст</span>
                     </span>
                 </label>
                 <label class="cursor-pointer">
                     <input type="radio" name="type" value="link" class="peer sr-only" onchange="toggleFileInput()">
-                    <span class="inline-flex items-center gap-2 px-5 py-3 font-mono text-xs border border-gray-700 bg-black/50 
-                        peer-checked:bg-blue-900/30 peer-checked:border-blue-500 peer-checked:text-blue-400
-                        transition-all hover:border-gray-500 hover:bg-gray-900">
+                    <span class="radio-card">
                         <span>🔗</span>
-                        <span>LINK</span>
+                        <span>Ссылка</span>
                     </span>
                 </label>
                 <label class="cursor-pointer">
                     <input type="radio" name="type" value="file" class="peer sr-only" onchange="toggleFileInput()">
-                    <span class="inline-flex items-center gap-2 px-5 py-3 font-mono text-xs border border-gray-700 bg-black/50 
-                        peer-checked:bg-green-900/30 peer-checked:border-green-500 peer-checked:text-green-400
-                        transition-all hover:border-gray-500 hover:bg-gray-900">
+                    <span class="radio-card">
                         <span>📦</span>
-                        <span>FILE</span>
+                        <span>Файл</span>
                     </span>
                 </label>
             </div>
@@ -46,27 +40,26 @@
         
         <!-- Поле содержимого -->
         <div>
-            <label class="block text-xs font-mono text-gray-500 mb-2">>> ENTER_CONTENT</label>
-            <textarea name="content" rows="5" 
-                class="w-full px-4 py-3 font-mono text-sm input-glass"
-                placeholder="_waiting_for_input..."></textarea>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Содержимое</label>
+            <textarea name="content" rows="4" 
+                class="w-full input-clean"
+                placeholder="Напишите текст или вставьте ссылку..."></textarea>
         </div>
         
         <!-- Поле загрузки файла -->
         <div id="fileInputContainer" class="hidden">
-            <label class="block text-xs font-mono text-gray-500 mb-2">>> ATTACH_FILE</label>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Файл</label>
             <input type="file" name="file" id="fileInput"
-                class="w-full px-4 py-3 font-mono text-sm input-glass"
+                class="w-full input-clean"
                 accept=".png,.jpg,.jpeg,.gif,.pdf,.zip,.rar,.7z,.tar,.gz">
-            <p class="mt-2 text-xs font-mono text-gray-600">
-                [SUPPORTED: IMG, PDF, ARCHIVES | MAX: 100MB]
+            <p class="mt-2 text-xs text-gray-500">
+                Изображения, PDF, архивы до 100 МБ
             </p>
         </div>
         
         <!-- Кнопка отправки -->
-        <button type="submit" 
-            class="btn-neon w-full sm:w-auto px-8 py-3 font-mono text-sm font-bold">
-            [EXECUTE_PUBLISH]
+        <button type="submit" class="btn-primary">
+            Опубликовать
         </button>
     </form>
 </div>
@@ -74,12 +67,12 @@
 
 <!-- Заголовок ленты -->
 <div class="flex items-center justify-between mb-6 animate-fade-in-delay-1">
-    <h1 class="text-2xl font-bold text-orange-500 flex items-center gap-3 font-mono">
-        <span class="text-3xl">📡</span>
-        <span>[FEED_STREAM]</span>
+    <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+        <span class="text-3xl">📰</span>
+        <span>Лента публикаций</span>
     </h1>
-    <div class="px-4 py-2 border border-gray-700 bg-black/30 font-mono text-xs text-gray-500">
-        RECORDS: <span class="text-orange-500">{{ posts|length }}</span>
+    <div class="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-600">
+        Записей: <span class="font-semibold text-gray-800">{{ posts|length }}</span>
     </div>
 </div>
 
@@ -95,12 +88,15 @@
                         {% if post.type == 'text' %}post-type-text
                         {% elif post.type == 'link' %}post-type-link
                         {% elif post.type == 'file' %}post-type-file{% endif %}">
-                        [{{ post.type|upper }}]
+                        {% if post.type == 'text' %}📄
+                        {% elif post.type == 'link' %}🔗
+                        {% elif post.type == 'file' %}📦{% endif %}
+                        {{ post.type }}
                     </span>
                     
                     <!-- Дата -->
-                    <span class="text-xs font-mono text-gray-600">
-                        :: {{ post.created_at.strftime('%Y-%m-%d %H:%M') if post.created_at else 'N/A' }}
+                    <span class="text-xs text-gray-500">
+                        {{ post.created_at.strftime('%d.%m.%Y %H:%M') if post.created_at else '' }}
                     </span>
                 </div>
                 
@@ -108,61 +104,53 @@
                 {% if is_admin %}
                 <button 
                     hx-delete="{{ url_for('delete_post', post_id=post.id) }}"
-                    hx-confirm="[WARNING] DELETE THIS RECORD?"
+                    hx-confirm="Удалить эту запись?"
                     hx-swap="outerHTML swap:0.3s"
                     hx-target="closest article"
-                    class="btn-delete px-3 py-1 font-mono text-xs"
-                    title="Delete">
-                    [X]
+                    class="btn-danger text-sm"
+                    title="Удалить">
+                    ✕
                 </button>
                 {% endif %}
             </div>
             
             <!-- Разделитель -->
-            <div class="divider-glow my-4"></div>
+            <div class="divider-clean"></div>
             
             <!-- Содержимое поста -->
-            <div class="prose prose-invert max-w-none font-mono text-sm">
+            <div class="prose max-w-none text-gray-700">
                 {% if post.type == 'link' %}
-                    <p class="text-gray-400 break-all">
+                    <p class="break-all">
                         {{ post.content | urlize(target='_blank', rel='noopener', trim_url_limit=50) }}
                     </p>
                 {% elif post.type == 'file' %}
-                    <div class="space-y-4">
+                    <div class="space-y-3">
                         {% if post.content %}
-                        <p class="text-gray-400">{{ post.content }}</p>
+                        <p>{{ post.content }}</p>
                         {% endif %}
                         <a href="{{ url_for('static', filename='uploads/' + post.file_path) }}" 
                             download
-                            class="btn-download inline-flex items-center gap-3 px-6 py-3 font-mono text-xs">
-                            <span>⬇</span>
-                            <span>DOWNLOAD_FILE</span>
-                            <span>[{{ post.file_path }}]</span>
+                            class="btn-download">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                            </svg>
+                            Скачать файл
                         </a>
                     </div>
                 {% else %}
-                    <p class="text-gray-400 whitespace-pre-wrap">{{ post.content }}</p>
+                    <p class="whitespace-pre-wrap">{{ post.content }}</p>
                 {% endif %}
-            </div>
-            
-            <!-- Технический футер карточки -->
-            <div class="mt-4 pt-4 border-t border-gray-800 flex justify-between items-center text-xs font-mono text-gray-700">
-                <span>ID: {{ post.id }}</span>
-                <span>STATUS: ACTIVE</span>
             </div>
         </article>
         {% endfor %}
     {% else %}
         <!-- Пустая лента -->
-        <div class="glass-card p-12 text-center animate-fade-in">
-            <div class="text-6xl mb-4">📭</div>
-            <h3 class="text-xl font-bold text-orange-500 mb-2 font-mono">[NO_DATA_AVAILABLE]</h3>
-            <p class="text-gray-600 font-mono text-sm mb-4">FEED_STREAM is empty. Initialize first record.</p>
+        <div class="glass-card empty-state animate-fade-in">
+            <div class="empty-state-icon">📭</div>
+            <h3 class="text-lg font-semibold text-gray-700 mb-2">Лента пуста</h3>
+            <p class="text-gray-500 mb-4">Здесь пока нет публикаций</p>
             {% if is_admin %}
-            <div class="divider-glow my-4"></div>
-            <p class="text-gray-500 font-mono text-xs">
-                >> Use form above to create first post
-            </p>
+            <p class="text-sm text-gray-400">Создайте первую запись с помощью формы выше</p>
             {% endif %}
         </div>
     {% endif %}
@@ -175,14 +163,13 @@ function toggleFileInput() {
     fileInput.classList.toggle('hidden', !isFile);
 }
 
-// Показ имени выбранного файла
 document.getElementById('fileInput')?.addEventListener('change', function(e) {
     const fileName = e.target.files[0]?.name;
     if (fileName) {
         const nextEl = this.parentElement.querySelector('p');
         if (nextEl) {
-            nextEl.classList.add('text-green-500');
-            nextEl.textContent = '[SELECTED: ' + fileName + ']';
+            nextEl.classList.add('text-green-600');
+            nextEl.textContent = '✓ Выбран файл: ' + fileName;
         }
     }
 });

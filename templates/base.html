@@ -4,40 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Сайт Макса{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
         .htmx-swapping { opacity: 0; transition: opacity 0.3s ease-out; }
+        body { font-family: 'Roboto', sans-serif; }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
-<body class="text-gray-300">
-    <!-- Декоративные линии -->
-    <div class="fixed top-0 left-0 w-full h-1 warning-stripes z-50"></div>
-    
+<body>
     <!-- Навигация -->
-    <nav class="nav-glass fixed w-full top-0 z-40">
-        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="{{ url_for('index') }}" class="text-2xl font-bold gradient-text flex items-center gap-3">
-                <span class="text-3xl">⚡</span>
-                <span>САЙТ МАКСА</span>
-                <span class="w-3 h-3 bg-orange-500 status-indicator"></span>
+    <nav class="nav-glass fixed w-full top-0 z-50">
+        <div class="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="{{ url_for('index') }}" class="text-2xl font-bold gradient-text flex items-center gap-2">
+                <span class="text-3xl">🔬</span>
+                <span>Сайт Макса</span>
             </a>
             <div class="flex items-center space-x-4">
                 {% if is_admin %}
-                    <span class="text-xs text-orange-500 hidden sm:inline flex items-center gap-2 font-mono">
-                        <span class="w-2 h-2 bg-green-500 status-indicator"></span>
-                        [ADMIN_ACCESS_GRANTED]
-                    </span>
+                    <span class="text-sm text-gray-500 hidden sm:inline">Администратор</span>
                     <a href="{{ url_for('logout') }}" 
-                        class="btn-neon px-4 py-2 text-xs rounded-none border border-red-900/50">
-                        [LOGOUT]
+                        class="btn-secondary text-sm">
+                        Выйти
                     </a>
                 {% else %}
                     <a href="{{ url_for('login') }}" 
-                        class="btn-neon px-4 py-2 text-xs rounded-none">
-                        [LOGIN]
+                        class="btn-primary text-sm">
+                        Вход
                     </a>
                 {% endif %}
             </div>
@@ -45,30 +40,14 @@
     </nav>
 
     <!-- Основной контент -->
-    <main class="max-w-6xl mx-auto px-6 pt-24 pb-16 relative z-10">
-        <!-- Статус бар -->
-        <div class="mb-6 p-3 bg-black/50 border border-orange-900/30 flex justify-between items-center text-xs font-mono text-orange-500">
-            <span class="flex items-center gap-4">
-                <span class="flex items-center gap-2">
-                    <span class="w-2 h-2 bg-green-500 status-indicator"></span>
-                    SYSTEM: ONLINE
-                </span>
-                <span class="hidden sm:inline">|</span>
-                <span class="hidden sm:inline">SERVER: ACTIVE</span>
-                <span class="hidden sm:inline">|</span>
-                <span class="hidden sm:inline">UPTIME: 99.9%</span>
-            </span>
-            <span class="text-gray-600">{{ now().strftime('%Y-%m-%d %H:%M:%S') if now else '2026-03-20' }}</span>
-        </div>
-
+    <main class="max-w-5xl mx-auto px-6 pt-24 pb-12">
+        <!-- Уведомления -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 <div class="space-y-3 mb-6">
                     {% for category, message in messages %}
-                        <div class="px-4 py-3 border-l-4 font-mono text-sm
-                            {% if category == 'error' %}bg-red-900/20 border-red-500 text-red-400
-                            {% else %}bg-green-900/20 border-green-500 text-green-400{% endif %}">
-                            <span class="font-bold">[{% if category == 'error' %}ERROR{% else %}OK{% endif %}]</span> {{ message }}
+                        <div class="{% if category == 'error' %}alert-error{% else %}alert-success{% endif %}">
+                            {{ message }}
                         </div>
                     {% endfor %}
                 </div>
@@ -79,39 +58,27 @@
     </main>
 
     <!-- Футер -->
-    <footer class="border-t border-gray-800 py-8 relative z-10 bg-black/50">
-        <div class="max-w-6xl mx-auto px-6">
+    <footer class="footer-clean py-8">
+        <div class="max-w-5xl mx-auto px-6">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                <div class="text-center md:text-left font-mono text-xs text-gray-600">
-                    <p>© 2026 САЙТ МАКСА | ALL RIGHTS RESERVED</p>
-                    <p class="mt-1 text-gray-700">ENGINEERED WITH PRECISION ⚙️</p>
+                <div class="text-center md:text-left">
+                    <p class="text-gray-600 text-sm">
+                        © 2026 Сайт Макса. Все права защищены.
+                    </p>
+                    <p class="text-gray-400 text-xs mt-1">
+                        Инженерный блог • Чертежи • Проекты
+                    </p>
                 </div>
-                <div class="flex items-center gap-6 font-mono text-xs">
-                    <span class="text-gray-700">POWERED BY:</span>
-                    <span class="text-orange-500">FLASK</span>
-                    <span class="text-gray-700">|</span>
-                    <span class="text-orange-500">TAILWIND</span>
-                    <span class="text-gray-700">|</span>
-                    <span class="text-orange-500">HTMX</span>
+                <div class="flex items-center gap-4 text-xs text-gray-500">
+                    <span>Flask</span>
+                    <span>•</span>
+                    <span>Tailwind</span>
+                    <span>•</span>
+                    <span>HTMX</span>
                 </div>
-            </div>
-            <!-- Декоративная линия -->
-            <div class="mt-6 flex items-center gap-2">
-                <div class="flex-1 h-px bg-gradient-to-r from-transparent via-orange-900 to-transparent"></div>
-                <span class="text-orange-900 text-xs">◆</span>
-                <div class="flex-1 h-px bg-gradient-to-r from-transparent via-orange-900 to-transparent"></div>
             </div>
         </div>
     </footer>
-
-    <script>
-        // Звуковой эффект при клике (опционально)
-        document.addEventListener('click', function(e) {
-            if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') {
-                // Можно добавить click sound
-            }
-        });
-    </script>
 
     {% block extra_js %}{% endblock %}
 </body>

@@ -1,182 +1,113 @@
-/* ===== ИНДУСТРИАЛЬНЫЙ СТИЛЬ ===== */
+/* ===== ЧИСТЫЙ ПРОФЕССИОНАЛЬНЫЙ СТИЛЬ ===== */
 
-/* Тёмный технический фон */
+/* Светлый фон */
 body {
-    background-color: #0a0a0a;
-    background-image: 
-        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-    background-size: 50px 50px;
+    background-color: #f8f9fa;
     min-height: 100vh;
-    font-family: 'Courier New', Courier, monospace;
-    position: relative;
-    overflow-x: hidden;
-}
-
-/* Scanline эффект как на старых мониторах */
-body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: repeating-linear-gradient(
-        0deg,
-        rgba(0, 0, 0, 0.15),
-        rgba(0, 0, 0, 0.15) 1px,
-        transparent 1px,
-        transparent 2px
-    );
-    pointer-events: none;
-    z-index: 9999;
-}
-
-/* ===== ТЕХНИЧЕСКИЕ КАРТОЧКИ ===== */
-
-.glass-card {
-    background: rgba(20, 20, 20, 0.95);
-    border: 2px solid #333;
-    box-shadow: 
-        0 0 0 1px #1a1a1a,
-        0 4px 20px rgba(0, 0, 0, 0.8);
-    position: relative;
-    overflow: hidden;
-}
-
-.glass-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #ff6600, #ff8800, #ff6600);
-    background-size: 200% 100%;
-    animation: warningPulse 2s linear infinite;
-}
-
-@keyframes warningPulse {
-    0% { background-position: 0% 0%; }
-    100% { background-position: 200% 0%; }
-}
-
-.glass-card:hover {
-    border-color: #ff6600;
-    box-shadow: 
-        0 0 0 1px #1a1a1a,
-        0 0 30px rgba(255, 102, 0, 0.3),
-        0 8px 40px rgba(0, 0, 0, 0.9);
-    transform: translateY(-2px);
-}
-
-/* Уголки как на технических чертежах */
-.glass-card::after {
-    content: '';
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    width: 20px;
-    height: 20px;
-    border-top: 2px solid #ff6600;
-    border-right: 2px solid #ff6600;
-    opacity: 0.5;
+    font-family: 'Roboto', 'Open Sans', Arial, sans-serif;
+    color: #333333;
 }
 
 /* ===== НАВИГАЦИЯ ===== */
 
 .nav-glass {
-    background: rgba(10, 10, 10, 0.98);
-    border-bottom: 2px solid #333;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+    background: #ffffff;
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.nav-glass::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        #ff6600,
-        #ff8800,
-        #ff6600,
-        transparent
-    );
+/* ===== КАРТОЧКИ ===== */
+
+.glass-card {
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
 }
 
-/* ===== ТЕХНИЧЕСКИЙ ТЕКСТ ===== */
+.glass-card:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+    border-color: #2196f3;
+}
+
+/* ===== ЗАГОЛОВКИ ===== */
 
 .gradient-text {
-    color: #ff6600;
-    text-shadow: 
-        0 0 10px rgba(255, 102, 0, 0.5),
-        0 0 20px rgba(255, 102, 0, 0.3);
-    letter-spacing: 2px;
-    text-transform: uppercase;
+    color: #1976d2;
+    font-weight: 700;
+    letter-spacing: 0.5px;
 }
 
 /* ===== КНОПКИ ===== */
 
-.btn-neon {
-    background: linear-gradient(180deg, #2a2a2a, #1a1a1a);
-    border: 1px solid #444;
-    color: #ff6600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: bold;
+.btn-primary {
+    background: linear-gradient(180deg, #2196f3, #1976d2);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 24px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(33, 150, 243, 0.3);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(180deg, #1976d2, #1565c0);
+    box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background: #ffffff;
+    color: #2196f3;
+    border: 2px solid #2196f3;
+    border-radius: 6px;
+    padding: 10px 22px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background: #e3f2fd;
+}
+
+.btn-danger {
+    background: #f44336;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-weight: 500;
     transition: all 0.2s ease;
-    position: relative;
-    overflow: hidden;
 }
 
-.btn-neon::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 102, 0, 0.2), transparent);
-    transition: left 0.5s;
-}
-
-.btn-neon:hover::before {
-    left: 100%;
-}
-
-.btn-neon:hover {
-    border-color: #ff6600;
-    box-shadow: 
-        0 0 20px rgba(255, 102, 0, 0.4),
-        inset 0 0 10px rgba(255, 102, 0, 0.1);
-    transform: translateY(-2px);
+.btn-danger:hover {
+    background: #d32f2f;
+    box-shadow: 0 2px 8px rgba(244, 67, 54, 0.4);
 }
 
 /* ===== ПОЛЯ ВВОДА ===== */
 
-.input-glass {
-    background: rgba(0, 0, 0, 0.5);
-    border: 2px solid #333;
-    color: #00ff00;
-    font-family: 'Courier New', Courier, monospace;
+.input-clean {
+    background: #ffffff;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    color: #333333;
+    padding: 12px 16px;
+    font-size: 15px;
     transition: all 0.2s ease;
 }
 
-.input-glass:focus {
-    background: rgba(0, 0, 0, 0.8);
-    border-color: #ff6600;
+.input-clean:focus {
+    border-color: #2196f3;
     outline: none;
-    box-shadow: 
-        0 0 20px rgba(255, 102, 0, 0.3),
-        inset 0 0 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
 }
 
-.input-glass::placeholder {
-    color: #555;
+.input-clean::placeholder {
+    color: #999999;
 }
 
 /* ===== БЕЙДЖИ ТИПОВ ПОСТОВ ===== */
@@ -185,32 +116,27 @@ body::before {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 4px 12px;
-    border-radius: 0;
-    font-size: 10px;
-    font-weight: bold;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    font-family: 'Courier New', Courier, monospace;
-    border: 1px solid;
+    letter-spacing: 0.5px;
 }
 
 .post-type-text {
-    background: rgba(100, 100, 100, 0.3);
-    border-color: #888;
-    color: #ccc;
+    background: #e3f2fd;
+    color: #1976d2;
 }
 
 .post-type-link {
-    background: rgba(0, 100, 200, 0.3);
-    border-color: #0066cc;
-    color: #66b3ff;
+    background: #e8f5e9;
+    color: #388e3c;
 }
 
 .post-type-file {
-    background: rgba(0, 150, 50, 0.3);
-    border-color: #009933;
-    color: #66ff99;
+    background: #fff3e0;
+    color: #f57c00;
 }
 
 /* ===== АНИМАЦИИ ===== */
@@ -237,142 +163,124 @@ body::before {
 /* ===== СКРОЛЛБАР ===== */
 
 ::-webkit-scrollbar {
-    width: 12px;
+    width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-    background: #0a0a0a;
-    border-left: 1px solid #222;
+    background: #f1f1f1;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, #333, #222);
-    border: 2px solid #0a0a0a;
+    background: #c1c1c1;
+    border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, #ff6600, #cc5500);
+    background: #a8a8a8;
 }
 
 /* ===== РАЗДЕЛИТЕЛЬ ===== */
 
-.divider-glow {
-    height: 2px;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        #333,
-        #ff6600,
-        #333,
-        transparent
-    );
+.divider-clean {
+    height: 1px;
+    background: #e0e0e0;
+    margin: 16px 0;
 }
 
-/* ===== КНОПКА УДАЛЕНИЯ ===== */
+/* ===== ССЫЛКИ ===== */
 
-.btn-delete {
+a {
+    color: #2196f3;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: #1976d2;
+    text-decoration: underline;
+}
+
+/* ===== УВЕДОМЛЕНИЯ ===== */
+
+.alert-success {
+    background: #e8f5e9;
+    border-left: 4px solid #4caf50;
+    color: #2e7d32;
+    padding: 12px 16px;
+    border-radius: 4px;
+}
+
+.alert-error {
+    background: #ffebee;
+    border-left: 4px solid #f44336;
+    color: #c62828;
+    padding: 12px 16px;
+    border-radius: 4px;
+}
+
+/* ===== ФУТЕР ===== */
+
+.footer-clean {
+    background: #ffffff;
+    border-top: 1px solid #e0e0e0;
+}
+
+/* ===== РАДИО КНОПКИ ===== */
+
+.radio-card {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    cursor: pointer;
     transition: all 0.2s ease;
-    border: 1px solid transparent;
+    background: #ffffff;
 }
 
-.btn-delete:hover {
-    background: rgba(255, 50, 50, 0.2);
-    color: #ff3333;
-    border-color: #ff3333;
-    box-shadow: 0 0 15px rgba(255, 50, 50, 0.3);
+.radio-card:hover {
+    border-color: #2196f3;
+    background: #e3f2fd;
+}
+
+input[type="radio"]:checked + .radio-card {
+    border-color: #2196f3;
+    background: #e3f2fd;
+    color: #1976d2;
 }
 
 /* ===== КНОПКА СКАЧИВАНИЯ ===== */
 
 .btn-download {
-    background: linear-gradient(180deg, #1a2a1a, #0a1a0a);
-    border: 1px solid #006633;
-    color: #66ff99;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-weight: bold;
-    transition: all 0.2s ease;
+    background: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .btn-download:hover {
-    background: linear-gradient(180deg, #2a3a2a, #1a2a1a);
-    border-color: #00ff66;
-    box-shadow: 0 0 20px rgba(0, 255, 102, 0.3);
-    transform: translateY(-2px);
+    background: #388e3c;
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+    transform: translateY(-1px);
 }
 
-/* ===== ИНДИКАТОРЫ ===== */
+/* ===== ПУСТОЕ СОСТОЯНИЕ ===== */
 
-.status-indicator {
-    width: 8px;
-    height: 8px;
-    background: #00ff00;
-    border-radius: 0;
-    animation: blink 1s step-end infinite;
+.empty-state {
+    text-align: center;
+    padding: 48px 24px;
+    color: #757575;
 }
 
-@keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
-}
-
-/* ===== ДЕКОРАТИВНЫЕ ЛИНИИ ===== */
-
-.tech-lines {
-    position: relative;
-}
-
-.tech-lines::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 20px;
-    width: 2px;
-    height: 100%;
-    background: linear-gradient(180deg, transparent, #333, transparent);
-}
-
-.tech-lines::after {
-    content: '';
-    position: absolute;
-    top: 20px;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, #333, transparent);
-}
-
-/* ===== HEX ПАТЕРН ===== */
-
-.hex-pattern {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23ff6600' fill-opacity='0.05'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-}
-
-/* ===== CRT ЭФФЕКТ ===== */
-
-@keyframes flicker {
-    0% { opacity: 0.97; }
-    5% { opacity: 0.95; }
-    10% { opacity: 0.9; }
-    15% { opacity: 0.95; }
-    20% { opacity: 0.99; }
-    50% { opacity: 0.95; }
-    80% { opacity: 0.98; }
-    100% { opacity: 0.97; }
-}
-
-.crt-flicker {
-    animation: flicker 0.15s infinite;
-}
-
-/* ===== WARNING STRIPES ===== */
-
-.warning-stripes {
-    background: repeating-linear-gradient(
-        45deg,
-        #1a1a1a,
-        #1a1a1a 10px,
-        #222 10px,
-        #222 20px
-    );
+.empty-state-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+    opacity: 0.5;
 }
