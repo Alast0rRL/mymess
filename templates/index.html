@@ -121,7 +121,7 @@
                 <!-- Кнопка удаления (только админ) -->
                 {% if is_admin %}
                 <button 
-                    hx-delete="{{ url_for('delete_post', post_id=post.id) }}"
+                    hx-post="{{ url_for('delete_post', post_id=post.id) }}"
                     hx-confirm="Удалить эту запись?"
                     hx-swap="outerHTML swap:0.3s"
                     hx-target="closest article"
