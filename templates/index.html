@@ -141,22 +141,26 @@
                     {% if post.content %}
                     <p class="mb-3">{{ post.content }}</p>
                     {% endif %}
+                    {% if post.file_path %}
                     <div class="media-container">
                         <img src="{{ url_for('static', filename='uploads/' + post.file_path) }}" 
                             alt="Изображение" 
                             class="media-image"
                             loading="lazy">
                     </div>
+                    {% endif %}
                 {% elif post.type == 'video' %}
                     {% if post.content %}
                     <p class="mb-3">{{ post.content }}</p>
                     {% endif %}
+                    {% if post.file_path %}
                     <div class="media-container">
                         <video controls class="media-video" preload="metadata">
                             <source src="{{ url_for('static', filename='uploads/' + post.file_path) }}" type="video/{{ post.file_path.split('.')[-1] }}">
                             Ваш браузер не поддерживает видео.
                         </video>
                     </div>
+                    {% endif %}
                 {% elif post.type == 'link' %}
                     {% if post.content %}
                     <p class="break-all">
@@ -167,6 +171,7 @@
                     {% if post.content %}
                     <p class="mb-3">{{ post.content }}</p>
                     {% endif %}
+                    {% if post.file_path %}
                     <a href="{{ url_for('static', filename='uploads/' + post.file_path) }}" 
                         download
                         class="btn-download">
@@ -175,6 +180,7 @@
                         </svg>
                         Скачать файл
                     </a>
+                    {% endif %}
                 {% else %}
                     {% if post.content %}
                     <p class="whitespace-pre-wrap">{{ post.content }}</p>
