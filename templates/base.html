@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Freedom Stream{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <style>
+        .htmx-swapping { opacity: 0; transition: opacity 0.3s ease-out; }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <nav class="bg-white shadow-sm border-b">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="{{ url_for('index') }}" class="text-xl font-bold text-gray-800 hover:text-gray-600">
+                Freedom Stream
+            </a>
+            <div class="space-x-4">
+                {% if is_admin() %}
+                    <a href="{{ url_for('logout') }}" class="text-sm text-red-600 hover:text-red-800">
+                        Выйти
+                    </a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="text-sm text-gray-600 hover:text-gray-800">
+                        Вход
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="mb-4 p-4 rounded-lg {% if category == 'error' %}bg-red-100 text-red-800{% else %}bg-green-100 text-green-800{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="mt-auto py-6 text-center text-sm text-gray-500">
+        Freedom Stream &copy; {{ now().year if now else '2024' }}
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
