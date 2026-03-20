@@ -27,7 +27,6 @@ class Config:
     }
     
     # Хэш пароля администратора (по умолчанию 'admin')
-    # Для смены пароля используйте: generate_password_hash('ваш_пароль')
     ADMIN_PASSWORD_HASH = os.environ.get('ADMIN_PASSWORD_HASH') or \
         generate_password_hash('admin')
     
@@ -36,6 +35,15 @@ class Config:
     SESSION_COOKIE_SECURE = False  # Включить True для HTTPS
     SESSION_COOKIE_SAMESITE = 'Lax'
     PERMANENT_SESSION_LIFETIME = timedelta(hours=2)
+    
+    # Настройки логирования
+    LOG_FOLDER = os.path.join(BASE_DIR, 'logs')
+    LOG_LEVEL = os.environ.get('LOG_LEVEL', 'INFO').upper()
+    LOG_MAX_BYTES = 10 * 1024 * 1024  # 10 MB
+    LOG_BACKUP_COUNT = 10
+    
+    # Debug режим
+    DEBUG = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
     
     @staticmethod
     def verify_password(password: str) -> bool:
