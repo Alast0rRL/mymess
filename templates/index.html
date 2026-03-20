@@ -29,6 +29,20 @@
                     </span>
                 </label>
                 <label class="cursor-pointer">
+                    <input type="radio" name="type" value="image" class="peer sr-only" onchange="toggleFileInput()">
+                    <span class="radio-card">
+                        <span>🖼️</span>
+                        <span>Изображение</span>
+                    </span>
+                </label>
+                <label class="cursor-pointer">
+                    <input type="radio" name="type" value="video" class="peer sr-only" onchange="toggleFileInput()">
+                    <span class="radio-card">
+                        <span>🎬</span>
+                        <span>Видео</span>
+                    </span>
+                </label>
+                <label class="cursor-pointer">
                     <input type="radio" name="type" value="file" class="peer sr-only" onchange="toggleFileInput()">
                     <span class="radio-card">
                         <span>📦</span>
@@ -40,10 +54,10 @@
         
         <!-- Поле содержимого -->
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Содержимое</label>
-            <textarea name="content" rows="4" 
+            <label class="block text-sm font-medium text-gray-700 mb-2">Описание (необязательно)</label>
+            <textarea name="content" rows="3" 
                 class="w-full input-clean"
-                placeholder="Напишите текст или вставьте ссылку..."></textarea>
+                placeholder="Добавьте текст к публикации..."></textarea>
         </div>
         
         <!-- Поле загрузки файла -->
@@ -51,9 +65,9 @@
             <label class="block text-sm font-medium text-gray-700 mb-2">Файл</label>
             <input type="file" name="file" id="fileInput"
                 class="w-full input-clean"
-                accept=".png,.jpg,.jpeg,.gif,.pdf,.zip,.rar,.7z,.tar,.gz">
+                accept=".png,.jpg,.jpeg,.gif,.webp,.bmp,.svg,.mp4,.webm,.ogg,.avi,.mov,.mkv,.pdf,.zip,.rar,.7z,.tar,.gz">
             <p class="mt-2 text-xs text-gray-500">
-                Изображения, PDF, архивы до 100 МБ
+                Изображения (PNG, JPG, GIF, WebP), Видео (MP4, WebM), Документы, Архивы. Макс. 100 МБ
             </p>
         </div>
         
@@ -87,9 +101,13 @@
                     <span class="post-type-badge 
                         {% if post.type == 'text' %}post-type-text
                         {% elif post.type == 'link' %}post-type-link
+                        {% elif post.type == 'image' %}post-type-image
+                        {% elif post.type == 'video' %}post-type-video
                         {% elif post.type == 'file' %}post-type-file{% endif %}">
                         {% if post.type == 'text' %}📄
                         {% elif post.type == 'link' %}🔗
+                        {% elif post.type == 'image' %}🖼️
+                        {% elif post.type == 'video' %}🎬
                         {% elif post.type == 'file' %}📦{% endif %}
                         {{ post.type }}
                     </span>
@@ -119,26 +137,48 @@
             
             <!-- Содержимое поста -->
             <div class="prose max-w-none text-gray-700">
-                {% if post.type == 'link' %}
+                {% if post.type == 'image' %}
+                    {% if post.content %}
+                    <p class="mb-3">{{ post.content }}</p>
+                    {% endif %}
+                    <div class="media-container">
+                        <img src="{{ url_for('static', filename='uploads/' + post.file_path) }}" 
+                            alt="Изображение" 
+                            class="media-image"
+                            loading="lazy">
+                    </div>
+                {% elif post.type == 'video' %}
+                    {% if post.content %}
+                    <p class="mb-3">{{ post.content }}</p>
+                    {% endif %}
+                    <div class="media-container">
+                        <video controls class="media-video" preload="metadata">
+                            <source src="{{ url_for('static', filename='uploads/' + post.file_path) }}" type="video/{{ post.file_path.split('.')[-1] }}">
+                            Ваш браузер не поддерживает видео.
+                        </video>
+                    </div>
+                {% elif post.type == 'link' %}
+                    {% if post.content %}
                     <p class="break-all">
                         {{ post.content | urlize(target='_blank', rel='noopener', trim_url_limit=50) }}
                     </p>
+                    {% endif %}
                 {% elif post.type == 'file' %}
-                    <div class="space-y-3">
-                        {% if post.content %}
-                        <p>{{ post.content }}</p>
-                        {% endif %}
-                        <a href="{{ url_for('static', filename='uploads/' + post.file_path) }}" 
-                            download
-                            class="btn-download">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                            </svg>
-                            Скачать файл
-                        </a>
-                    </div>
+                    {% if post.content %}
+                    <p class="mb-3">{{ post.content }}</p>
+                    {% endif %}
+                    <a href="{{ url_for('static', filename='uploads/' + post.file_path) }}" 
+                        download
+                        class="btn-download">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                        </svg>
+                        Скачать файл
+                    </a>
                 {% else %}
+                    {% if post.content %}
                     <p class="whitespace-pre-wrap">{{ post.content }}</p>
+                    {% endif %}
                 {% endif %}
             </div>
         </article>
@@ -159,8 +199,9 @@
 <script>
 function toggleFileInput() {
     const fileInput = document.getElementById('fileInputContainer');
-    const isFile = document.querySelector('input[name="type"][value="file"]').checked;
-    fileInput.classList.toggle('hidden', !isFile);
+    const type = document.querySelector('input[name="type"]:checked').value;
+    const isMedia = ['image', 'video', 'file'].includes(type);
+    fileInput.classList.toggle('hidden', !isMedia);
 }
 
 document.getElementById('fileInput')?.addEventListener('change', function(e) {

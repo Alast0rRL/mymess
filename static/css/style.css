@@ -134,6 +134,16 @@ body {
     color: #388e3c;
 }
 
+.post-type-image {
+    background: #fce4ec;
+    color: #c2185b;
+}
+
+.post-type-video {
+    background: #f3e5f5;
+    color: #7b1fa2;
+}
+
 .post-type-file {
     background: #fff3e0;
     color: #f57c00;
@@ -283,4 +293,34 @@ input[type="radio"]:checked + .radio-card {
     font-size: 64px;
     margin-bottom: 16px;
     opacity: 0.5;
+}
+
+/* ===== МЕДИА (ИЗОБРАЖЕНИЯ И ВИДЕО) ===== */
+
+.media-container {
+    margin-top: 16px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f5f5f5;
+}
+
+.media-image {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+}
+
+.media-video {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 8px;
+    background: #000;
+}
+
+@media (max-width: 768px) {
+    .media-image,
+    .media-video {
+        border-radius: 6px;
+    }
 }

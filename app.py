@@ -8,6 +8,21 @@ from models import db, Post
 from auth import check_password, login_required, is_admin
 
 
+def get_file_type(filename: str) -> str:
+    """Определение типа файла по расширению."""
+    ext = filename.rsplit('.', 1)[1].lower() if '.' in filename else ''
+    
+    image_exts = {'png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp', 'svg'}
+    video_exts = {'mp4', 'webm', 'ogg', 'avi', 'mov', 'mkv'}
+    
+    if ext in image_exts:
+        return 'image'
+    elif ext in video_exts:
+        return 'video'
+    else:
+        return 'file'
+
+
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
@@ -63,13 +78,14 @@ def create_app(config_class=Config):
                 ext = filename.rsplit('.', 1)[1].lower() if '.' in filename else ''
                 
                 if ext not in app.config['ALLOWED_EXTENSIONS']:
-                    flash(f'Недопустимый тип файла. Разрешены: {", ".join(app.config["ALLOWED_EXTENSIONS"])}', 'error')
+                    flash(f'Недопустимый тип файла. Разрешены: изображения, видео, PDF, архивы', 'error')
                     return redirect(url_for('index'))
                 
                 unique_filename = generate_unique_filename(filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], unique_filename))
                 file_path = unique_filename
-                post_type = 'file'
+                # Автоматически определяем тип файла
+                post_type = get_file_type(filename)
             else:
                 flash('Файл не выбран', 'error')
                 return redirect(url_for('index'))

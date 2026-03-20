@@ -15,6 +15,13 @@ class Config:
     UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static', 'uploads')
     MAX_CONTENT_LENGTH = 100 * 1024 * 1024  # 100 MB max upload
     
-    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'pdf', 'zip', 'rar', '7z', 'tar', 'gz'}
+    ALLOWED_EXTENSIONS = {
+        # Изображения
+        'png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp', 'svg',
+        # Видео
+        'mp4', 'webm', 'ogg', 'avi', 'mov', 'mkv',
+        # Документы и архивы
+        'pdf', 'zip', 'rar', '7z', 'tar', 'gz'
+    }
     
     ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD') or 'admin'
