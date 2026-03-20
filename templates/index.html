@@ -101,6 +101,9 @@
                     <p class="mb-3">{{ post.content }}</p>
                     {% endif %}
                     {% if post.file_path %}
+                    <div class="mb-2 text-sm text-gray-500">
+                        📎 {{ post.file_path }}
+                    </div>
                     <div class="media-container">
                         <img src="{{ url_for('static', filename='uploads/' + post.file_path) }}" 
                             alt="Изображение" 
@@ -113,6 +116,9 @@
                     <p class="mb-3">{{ post.content }}</p>
                     {% endif %}
                     {% if post.file_path %}
+                    <div class="mb-2 text-sm text-gray-500">
+                        📎 {{ post.file_path }}
+                    </div>
                     <div class="media-container">
                         <video controls class="media-video" preload="metadata">
                             <source src="{{ url_for('static', filename='uploads/' + post.file_path) }}" type="video/{{ post.file_path.split('.')[-1] }}">
@@ -131,6 +137,9 @@
                     <p class="mb-3">{{ post.content }}</p>
                     {% endif %}
                     {% if post.file_path %}
+                    <div class="mb-2 text-sm text-gray-500">
+                        📎 {{ post.file_path }}
+                    </div>
                     <a href="{{ url_for('static', filename='uploads/' + post.file_path) }}" 
                         download
                         class="btn-download">
