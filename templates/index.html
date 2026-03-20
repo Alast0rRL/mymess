@@ -10,59 +10,17 @@
     </h2>
     
     <form action="{{ url_for('create_post') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
-        <!-- Выбор типа поста -->
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-3">Тип публикации</label>
-            <div class="flex flex-wrap gap-3">
-                <label class="cursor-pointer">
-                    <input type="radio" name="type" value="text" checked class="peer sr-only" onchange="toggleFileInput()">
-                    <span class="radio-card">
-                        <span>📄</span>
-                        <span>Текст</span>
-                    </span>
-                </label>
-                <label class="cursor-pointer">
-                    <input type="radio" name="type" value="link" class="peer sr-only" onchange="toggleFileInput()">
-                    <span class="radio-card">
-                        <span>🔗</span>
-                        <span>Ссылка</span>
-                    </span>
-                </label>
-                <label class="cursor-pointer">
-                    <input type="radio" name="type" value="image" class="peer sr-only" onchange="toggleFileInput()">
-                    <span class="radio-card">
-                        <span>🖼️</span>
-                        <span>Изображение</span>
-                    </span>
-                </label>
-                <label class="cursor-pointer">
-                    <input type="radio" name="type" value="video" class="peer sr-only" onchange="toggleFileInput()">
-                    <span class="radio-card">
-                        <span>🎬</span>
-                        <span>Видео</span>
-                    </span>
-                </label>
-                <label class="cursor-pointer">
-                    <input type="radio" name="type" value="file" class="peer sr-only" onchange="toggleFileInput()">
-                    <span class="radio-card">
-                        <span>📦</span>
-                        <span>Файл</span>
-                    </span>
-                </label>
-            </div>
-        </div>
-        
         <!-- Поле содержимого -->
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Описание (необязательно)</label>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Текст публикации</label>
             <textarea name="content" rows="3" 
                 class="w-full input-clean"
-                placeholder="Добавьте текст к публикации..."></textarea>
+                placeholder="Напишите текст или вставьте ссылку..."></textarea>
         </div>
         
         <!-- Поле загрузки файла -->
-        <div id="fileInputContainer" class="hidden">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Файл</label>
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Прикрепить файл (необязательно)</label>
             <input type="file" name="file" id="fileInput"
                 class="w-full input-clean"
                 accept=".png,.jpg,.jpeg,.gif,.webp,.bmp,.svg,.mp4,.webm,.ogg,.avi,.mov,.mkv,.pdf,.zip,.rar,.7z,.tar,.gz">
@@ -83,7 +41,7 @@
 <div class="flex items-center justify-between mb-6 animate-fade-in-delay-1">
     <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
         <span class="text-3xl">📰</span>
-        <span>Лента публикаций</span>
+        <span>Посты</span>
     </h1>
     <div class="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-600">
         Записей: <span class="font-semibold text-gray-800">{{ posts|length }}</span>
@@ -204,13 +162,6 @@
 </div>
 
 <script>
-function toggleFileInput() {
-    const fileInput = document.getElementById('fileInputContainer');
-    const type = document.querySelector('input[name="type"]:checked').value;
-    const isMedia = ['image', 'video', 'file'].includes(type);
-    fileInput.classList.toggle('hidden', !isMedia);
-}
-
 document.getElementById('fileInput')?.addEventListener('change', function(e) {
     const fileName = e.target.files[0]?.name;
     if (fileName) {

@@ -58,43 +58,37 @@ def create_app(config_class=Config):
     @app.route('/create', methods=['POST'])
     @login_required
     def create_post():
-        post_type = request.form.get('type')
         content = request.form.get('content', '').strip()
+        file = request.files.get('file')
         
-        if not content:
-            flash('Содержимое не может быть пустым', 'error')
-            return redirect(url_for('index'))
-        
+        # Определяем тип поста
+        post_type = 'text'
         file_path = None
         
-        # Проверяем, выбран ли тип с файлом (image, video, file)
-        if post_type in ['file', 'image', 'video']:
-            if 'file' not in request.files:
-                flash('Файл не найден', 'error')
+        # Если есть файл - определяем его тип
+        if file and file.filename:
+            filename = secure_filename(file.filename)
+            ext = filename.rsplit('.', 1)[1].lower() if '.' in filename else ''
+            
+            if ext not in app.config['ALLOWED_EXTENSIONS']:
+                flash(f'Недопустимый тип файла. Разрешены: изображения, видео, PDF, архивы', 'error')
                 return redirect(url_for('index'))
             
-            file = request.files['file']
-            if file and file.filename:
-                filename = secure_filename(file.filename)
-                ext = filename.rsplit('.', 1)[1].lower() if '.' in filename else ''
-                
-                if ext not in app.config['ALLOWED_EXTENSIONS']:
-                    flash(f'Недопустимый тип файла. Разрешены: изображения, видео, PDF, архивы', 'error')
-                    return redirect(url_for('index'))
-                
-                unique_filename = generate_unique_filename(filename)
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], unique_filename))
-                file_path = unique_filename
-                # Автоматически определяем тип файла по расширению
-                post_type = get_file_type(filename)
-            else:
-                flash('Файл не выбран', 'error')
-                return redirect(url_for('index'))
+            unique_filename = generate_unique_filename(filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], unique_filename))
+            file_path = unique_filename
+            post_type = get_file_type(filename)
         
-        elif post_type == 'link':
+        # Если нет файла, проверяем содержимое на ссылку
+        elif content:
             url_pattern = re.compile(r'https?://\S+')
-            if not url_pattern.search(content):
-                post_type = 'text'
+            if url_pattern.search(content):
+                post_type = 'link'
+        
+        # Если ничего нет - ошибка
+        if not content and not file_path:
+            flash('Добавьте текст или файл', 'error')
+            return redirect(url_for('index'))
         
         post = Post(type=post_type, content=content, file_path=file_path)
         db.session.add(post)
