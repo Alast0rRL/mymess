@@ -3,36 +3,48 @@
 {% block content %}
 <!-- Форма создания поста (только для админа) -->
 {% if is_admin %}
-<div class="glass-card rounded-2xl p-6 mb-8 animate-fade-in">
-    <h2 class="text-xl font-semibold mb-6 flex items-center gap-2">
-        <span class="text-2xl">✎</span>
-        <span class="gradient-text">Новый пост</span>
+<div class="glass-card rounded-3xl p-8 mb-10 animate-fade-in card-glow">
+    <h2 class="text-2xl font-semibold mb-8 flex items-center gap-3">
+        <span class="text-3xl icon-bounce">✎</span>
+        <span class="gradient-text">Создать публикацию</span>
     </h2>
     
-    <form action="{{ url_for('create_post') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
+    <form action="{{ url_for('create_post') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
         <!-- Выбор типа поста -->
         <div>
-            <label class="block text-sm font-medium text-gray-400 mb-3">Тип публикации</label>
-            <div class="flex flex-wrap gap-3">
-                <label class="cursor-pointer">
+            <label class="block text-sm font-medium text-purple-300 mb-4 flex items-center gap-2">
+                <span class="text-lg">🎯</span>
+                Тип публикации
+            </label>
+            <div class="flex flex-wrap gap-4">
+                <label class="cursor-pointer group">
                     <input type="radio" name="type" value="text" checked class="peer sr-only" onchange="toggleFileInput()">
-                    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-white/10 bg-white/5 peer-checked:bg-purple-500/30 peer-checked:border-purple-500/50 transition-all hover:bg-white/10">
-                        <span>📝</span>
-                        <span class="text-sm">Текст</span>
+                    <span class="inline-flex items-center gap-3 px-6 py-4 rounded-2xl border border-white/10 bg-white/5 
+                        peer-checked:bg-gradient-to-r peer-checked:from-purple-500/40 peer-checked:to-purple-600/40 
+                        peer-checked:border-purple-400/60 peer-checked:shadow-lg peer-checked:shadow-purple-500/30
+                        transition-all duration-300 hover:bg-white/10 hover:scale-105 hover:border-white/20">
+                        <span class="text-2xl group-hover:scale-110 transition-transform">📝</span>
+                        <span class="font-medium">Текст</span>
                     </span>
                 </label>
-                <label class="cursor-pointer">
+                <label class="cursor-pointer group">
                     <input type="radio" name="type" value="link" class="peer sr-only" onchange="toggleFileInput()">
-                    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-white/10 bg-white/5 peer-checked:bg-blue-500/30 peer-checked:border-blue-500/50 transition-all hover:bg-white/10">
-                        <span>🔗</span>
-                        <span class="text-sm">Ссылка</span>
+                    <span class="inline-flex items-center gap-3 px-6 py-4 rounded-2xl border border-white/10 bg-white/5 
+                        peer-checked:bg-gradient-to-r peer-checked:from-blue-500/40 peer-checked:to-cyan-500/40 
+                        peer-checked:border-blue-400/60 peer-checked:shadow-lg peer-checked:shadow-blue-500/30
+                        transition-all duration-300 hover:bg-white/10 hover:scale-105 hover:border-white/20">
+                        <span class="text-2xl group-hover:scale-110 transition-transform">🔗</span>
+                        <span class="font-medium">Ссылка</span>
                     </span>
                 </label>
-                <label class="cursor-pointer">
+                <label class="cursor-pointer group">
                     <input type="radio" name="type" value="file" class="peer sr-only" onchange="toggleFileInput()">
-                    <span class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-white/10 bg-white/5 peer-checked:bg-green-500/30 peer-checked:border-green-500/50 transition-all hover:bg-white/10">
-                        <span>📁</span>
-                        <span class="text-sm">Файл</span>
+                    <span class="inline-flex items-center gap-3 px-6 py-4 rounded-2xl border border-white/10 bg-white/5 
+                        peer-checked:bg-gradient-to-r peer-checked:from-green-500/40 peer-checked:to-emerald-500/40 
+                        peer-checked:border-green-400/60 peer-checked:shadow-lg peer-checked:shadow-green-500/30
+                        transition-all duration-300 hover:bg-white/10 hover:scale-105 hover:border-white/20">
+                        <span class="text-2xl group-hover:scale-110 transition-transform">📁</span>
+                        <span class="font-medium">Файл</span>
                     </span>
                 </label>
             </div>
@@ -40,50 +52,66 @@
         
         <!-- Поле содержимого -->
         <div>
-            <label class="block text-sm font-medium text-gray-400 mb-2">Содержимое</label>
-            <textarea name="content" rows="4" 
-                class="w-full px-4 py-3 rounded-xl input-glass"
-                placeholder="Напишите что-нибудь интересное..."></textarea>
+            <label class="block text-sm font-medium text-purple-300 mb-3 flex items-center gap-2">
+                <span class="text-lg">💫</span>
+                Содержимое
+            </label>
+            <textarea name="content" rows="5" 
+                class="w-full px-5 py-4 rounded-2xl input-glass text-base leading-relaxed resize-none"
+                placeholder="Поделитесь чем-то интересным..."></textarea>
         </div>
         
         <!-- Поле загрузки файла -->
         <div id="fileInputContainer" class="hidden">
-            <label class="block text-sm font-medium text-gray-400 mb-2">Файл</label>
-            <div class="relative">
+            <label class="block text-sm font-medium text-purple-300 mb-3 flex items-center gap-2">
+                <span class="text-lg">📎</span>
+                Прикрепить файл
+            </label>
+            <div class="relative group">
                 <input type="file" name="file" id="fileInput"
-                    class="w-full px-4 py-3 rounded-xl input-glass cursor-pointer"
+                    class="w-full px-5 py-4 rounded-2xl input-glass cursor-pointer"
                     accept=".png,.jpg,.jpeg,.gif,.pdf,.zip,.rar,.7z,.tar,.gz">
+                <div class="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-purple-500/30 pointer-events-none transition-colors"></div>
             </div>
-            <p class="mt-2 text-xs text-gray-500">
-                📎 Изображения, PDF, архивы до 100 МБ
+            <p class="mt-3 text-xs text-gray-500 flex items-center gap-2">
+                <span>📌</span>
+                Изображения, PDF, архивы до 100 МБ
             </p>
         </div>
         
         <!-- Кнопка отправки -->
-        <button type="submit" 
-            class="btn-glow w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-medium rounded-xl hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg shadow-purple-500/25">
-            ✦ Опубликовать
-        </button>
+        <div class="pt-4">
+            <button type="submit" 
+                class="btn-neon btn-glow w-full sm:w-auto px-10 py-4 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 text-white font-bold rounded-2xl hover:from-purple-600 hover:via-pink-600 hover:to-purple-600 transition-all shadow-2xl shadow-purple-500/30 text-lg flex items-center justify-center gap-3">
+                <span class="text-xl">🚀</span>
+                <span>Опубликовать</span>
+                <span class="text-xl">✨</span>
+            </button>
+        </div>
     </form>
 </div>
 {% endif %}
 
 <!-- Заголовок ленты -->
-<div class="flex items-center justify-between mb-6 animate-fade-in-delay-1">
-    <h1 class="text-2xl font-bold gradient-text flex items-center gap-3">
-        <span class="text-3xl">◇</span>
-        Лента
+<div class="flex items-center justify-between mb-8 animate-fade-in-delay-1">
+    <h1 class="text-3xl font-bold gradient-text flex items-center gap-4 parallax-title">
+        <span class="text-4xl icon-bounce">◇</span>
+        Лента публикаций
     </h1>
-    <span class="text-sm text-gray-500">{{ posts|length }} пост{{ posts|length|string|last if posts else '' }}{{ 'ов' if posts and posts|length|string|last in ['5','6','7','8','9','0'] or posts|length >= 11 and posts|length|string|last in ['1','2','3','4'] else 'а' if posts|length|string|last in ['1'] else 'ов' }}</span>
+    <div class="flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/5 border border-white/10">
+        <span class="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></span>
+        <span class="text-sm text-gray-300 font-medium">{{ posts|length }}</span>
+        <span class="text-xs text-gray-500">пост{{ posts|length|string|last if posts else '' }}{{ 'ов' if posts and posts|length|string|last in ['5','6','7','8','9','0'] or posts|length >= 11 and posts|length|string|last in ['1','2','3','4'] else 'а' if posts|length|string|last in ['1'] else 'ов' }}</span>
+    </div>
 </div>
 
 <!-- Лента постов -->
-<div class="space-y-4">
+<div class="space-y-5">
     {% if posts %}
         {% for post in posts %}
-        <article class="glass-card rounded-2xl p-6 animate-fade-in" style="animation-delay: {{ loop.index * 0.1 }}s" hx-preserve="true">
-            <div class="flex justify-between items-start mb-4">
-                <div class="flex items-center gap-3 flex-wrap">
+        <article class="glass-card rounded-3xl p-7 animate-fade-in card-glow" style="animation-delay: {{ loop.index * 0.08 }}s" hx-preserve="true">
+            <div class="flex justify-between items-start mb-5">
+                <div class="flex items-center gap-4 flex-wrap">
                     <!-- Бейдж типа поста -->
                     <span class="post-type-badge 
                         {% if post.type == 'text' %}post-type-text
@@ -96,8 +124,8 @@
                     </span>
                     
                     <!-- Дата -->
-                    <span class="text-xs text-gray-500 flex items-center gap-1">
-                        <span>🕐</span>
+                    <span class="text-xs text-gray-400 flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-full">
+                        <span class="text-purple-400">🕐</span>
                         {{ post.created_at.strftime('%d.%m.%Y %H:%M') if post.created_at else '' }}
                     </span>
                 </div>
@@ -106,10 +134,10 @@
                 {% if is_admin %}
                 <button 
                     hx-delete="{{ url_for('delete_post', post_id=post.id) }}"
-                    hx-confirm="Удалить этот пост?"
+                    hx-confirm="Удалить эту публикацию?"
                     hx-swap="outerHTML swap:0.3s"
                     hx-target="closest article"
-                    class="text-gray-500 hover:text-red-400 transition-colors p-2 hover:bg-red-500/10 rounded-lg"
+                    class="btn-delete text-gray-500 p-3 rounded-xl"
                     title="Удалить">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -121,37 +149,43 @@
             <!-- Содержимое поста -->
             <div class="prose prose-invert max-w-none">
                 {% if post.type == 'link' %}
-                    <p class="text-gray-200 break-all leading-relaxed">
+                    <p class="text-gray-200 break-all leading-relaxed text-base">
                         {{ post.content | urlize(target='_blank', rel='noopener', trim_url_limit=50) }}
                     </p>
                 {% elif post.type == 'file' %}
-                    <div class="space-y-3">
+                    <div class="space-y-4">
                         {% if post.content %}
-                        <p class="text-gray-200 leading-relaxed">{{ post.content }}</p>
+                        <p class="text-gray-200 leading-relaxed text-base">{{ post.content }}</p>
                         {% endif %}
                         <a href="{{ url_for('static', filename='uploads/' + post.file_path) }}" 
                             download
-                            class="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/30 text-green-400 rounded-xl hover:from-green-500/30 hover:to-emerald-500/30 transition-all group">
-                            <svg class="w-5 h-5 group-hover:translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            class="btn-download inline-flex items-center gap-3 px-7 py-4 bg-gradient-to-r from-green-500/20 to-emerald-500/20 border border-green-500/40 text-green-300 rounded-2xl hover:from-green-500/30 hover:to-emerald-500/30 transition-all group font-medium">
+                            <svg class="w-6 h-6 group-hover:translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                             </svg>
-                            <span class="font-medium">Скачать файл</span>
+                            <span>Скачать файл</span>
+                            <span class="text-lg">⬇</span>
                         </a>
                     </div>
                 {% else %}
-                    <p class="text-gray-200 whitespace-pre-wrap leading-relaxed">{{ post.content }}</p>
+                    <p class="text-gray-200 whitespace-pre-wrap leading-relaxed text-base">{{ post.content }}</p>
                 {% endif %}
             </div>
         </article>
         {% endfor %}
     {% else %}
         <!-- Пустая лента -->
-        <div class="glass-card rounded-2xl p-12 text-center animate-fade-in">
-            <div class="text-6xl mb-4">🌟</div>
-            <h3 class="text-xl font-semibold text-gray-300 mb-2">Лента пуста</h3>
-            <p class="text-gray-500">Здесь пока нет постов. Будьте первым!</p>
+        <div class="glass-card rounded-3xl p-16 text-center animate-fade-in card-glow">
+            <div class="text-7xl mb-6 icon-bounce">🌟</div>
+            <h3 class="text-2xl font-semibold text-gray-200 mb-3 gradient-text">Лента пуста</h3>
+            <p class="text-gray-400 text-lg mb-6">Здесь пока нет публикаций. Будьте первым!</p>
             {% if is_admin %}
-            <p class="text-gray-400 text-sm mt-4">Создайте первый пост с помощью формы выше</p>
+            <div class="divider-glow my-6"></div>
+            <p class="text-purple-300 text-sm flex items-center justify-center gap-2">
+                <span class="text-lg">✨</span>
+                Создайте первую публикацию с помощью формы выше
+                <span class="text-lg">✨</span>
+            </p>
             {% endif %}
         </div>
     {% endif %}
@@ -164,12 +198,16 @@ function toggleFileInput() {
     fileInput.classList.toggle('hidden', !isFile);
 }
 
-// Показ имени выбранного файла
+// Показ имени выбранного файла с анимацией
 document.getElementById('fileInput')?.addEventListener('change', function(e) {
     const fileName = e.target.files[0]?.name;
+    const label = this.parentElement.querySelector('label');
     if (fileName) {
-        this.nextElementSibling?.classList.add('text-green-400');
-        this.nextElementSibling.textContent = '📎 Выбран файл: ' + fileName;
+        const nextEl = this.parentElement.nextElementSibling;
+        if (nextEl) {
+            nextEl.classList.add('text-green-400', 'animate-pulse');
+            nextEl.innerHTML = '📎 <span class="font-medium">Выбран файл:</span> ' + fileName;
+        }
     }
 });
 </script>
