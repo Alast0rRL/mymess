@@ -67,7 +67,8 @@ def create_app(config_class=Config):
         
         file_path = None
         
-        if post_type == 'file':
+        # Проверяем, выбран ли тип с файлом (image, video, file)
+        if post_type in ['file', 'image', 'video']:
             if 'file' not in request.files:
                 flash('Файл не найден', 'error')
                 return redirect(url_for('index'))
@@ -84,7 +85,7 @@ def create_app(config_class=Config):
                 unique_filename = generate_unique_filename(filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], unique_filename))
                 file_path = unique_filename
-                # Автоматически определяем тип файла
+                # Автоматически определяем тип файла по расширению
                 post_type = get_file_type(filename)
             else:
                 flash('Файл не выбран', 'error')
