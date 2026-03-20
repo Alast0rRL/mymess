@@ -21,7 +21,7 @@ def create_app(config_class=Config):
     @app.route('/')
     def index():
         posts = Post.query.order_by(Post.created_at.desc()).all()
-        return render_template('index.html', posts=posts, is_admin=is_admin())
+        return render_template('index.html', posts=posts)
     
     @app.route('/login', methods=['GET', 'POST'])
     def login():
@@ -104,8 +104,8 @@ def create_app(config_class=Config):
         return redirect(url_for('index'))
     
     @app.context_processor
-    def utility_processor():
-        return {'is_admin': is_admin}
+    def inject_is_admin():
+        return {'is_admin': is_admin()}
     
     return app
 
