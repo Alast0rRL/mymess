@@ -1,8 +1,9 @@
 import os
 import re
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, make_response
 from werkzeug.utils import secure_filename
 from werkzeug.middleware.proxy_fix import ProxyFix
+from flask_wtf.csrf import CSRFProtect
 from config import Config
 from models import db, Post
 from auth import check_password, login_required, is_admin
@@ -23,10 +24,69 @@ def get_file_type(filename: str) -> str:
         return 'file'
 
 
+def validate_file_mime_type(file_stream) -> tuple[bool, str]:
+    """
+    Проверка MIME-типа файла по магическим байтам.
+    Возвращает (успех, сообщение об ошибке).
+    """
+    try:
+        import magic
+        
+        # Сохраняем позицию и читаем начало файла
+        current_pos = file_stream.tell()
+        file_stream.seek(0)
+        file_header = file_stream.read(2048)
+        file_stream.seek(current_pos)
+        
+        # Определяем MIME-тип
+        mime = magic.Magic(mime=True)
+        detected_mime = mime.from_buffer(file_header)
+        
+        # Разрешённые MIME-типы
+        allowed_mimes = {
+            # Изображения
+            'image/png', 'image/jpeg', 'image/gif', 'image/webp', 
+            'image/bmp', 'image/svg+xml',
+            # Видео
+            'video/mp4', 'video/webm', 'video/ogg', 'video/x-msvideo',
+            'video/quicktime', 'video/x-matroska',
+            # Документы
+            'application/pdf',
+            # Архивы
+            'application/zip', 'application/x-rar-compressed', 
+            'application/x-7z-compressed', 'application/x-tar',
+            'application/gzip', 'application/x-gzip'
+        }
+        
+        if detected_mime not in allowed_mimes:
+            return False, f'Недопустимый тип файла: {detected_mime}'
+        
+        return True, ''
+    except ImportError:
+        # Если python-magic не установлен, пропускаем проверку
+        return True, ''
+    except Exception as e:
+        # В случае ошибки логируем, но пропускаем файл
+        print(f"Warning: MIME check failed: {e}")
+        return True, ''
+
+
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
     app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
+    
+    # Инициализация CSRF защиты
+    csrf = CSRFProtect()
+    csrf.init_app(app)
+    
+    # Whitelist для HTMX запросов
+    @app.before_request
+    def handle_csrf_for_htmx():
+        """Обработка CSRF для HTMX запросов."""
+        if request.headers.get('HX-Request'):
+            # HTMX уже отправляет токен в заголовке X-CSRFToken
+            pass
     
     db.init_app(app)
     
@@ -72,6 +132,12 @@ def create_app(config_class=Config):
             
             if ext not in app.config['ALLOWED_EXTENSIONS']:
                 flash(f'Недопустимый тип файла. Разрешены: изображения, видео, PDF, архивы', 'error')
+                return redirect(url_for('index'))
+            
+            # Проверка MIME-типа
+            is_valid, error_msg = validate_file_mime_type(file.stream)
+            if not is_valid:
+                flash(error_msg, 'error')
                 return redirect(url_for('index'))
             
             unique_filename = generate_unique_filename(filename)
@@ -120,6 +186,33 @@ def create_app(config_class=Config):
     @app.context_processor
     def inject_is_admin():
         return {'is_admin': is_admin()}
+    
+    # Security headers для всех ответов
+    @app.after_request
+    def add_security_headers(response):
+        """Добавление заголовков безопасности."""
+        # Content Security Policy
+        response.headers['Content-Security-Policy'] = (
+            "default-src 'self'; "
+            "script-src 'self' 'unsafe-inline' cdn.tailwindcss.com unpkg.com; "
+            "style-src 'self' 'unsafe-inline' fonts.googleapis.com; "
+            "font-src fonts.gstatic.com; "
+            "img-src 'self' data: https:; "
+            "media-src 'self' blob:; "
+            "frame-ancestors 'none';"
+        )
+        # Защита от MIME sniffing
+        response.headers['X-Content-Type-Options'] = 'nosniff'
+        # Защита от clickjacking
+        response.headers['X-Frame-Options'] = 'DENY'
+        # XSS Protection
+        response.headers['X-XSS-Protection'] = '1; mode=block'
+        # Referrer Policy
+        response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+        # Permissions Policy
+        response.headers['Permissions-Policy'] = 'geolocation=(), microphone=(), camera=()'
+        
+        return response
     
     return app
 

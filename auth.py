@@ -5,7 +5,7 @@ from flask import session, redirect, url_for
 def check_password(password: str) -> bool:
     """Проверка пароля администратора."""
     from config import Config
-    return password == Config.ADMIN_PASSWORD
+    return Config.verify_password(password)
 
 
 def login_required(f):

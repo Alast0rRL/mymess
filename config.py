@@ -1,5 +1,7 @@
 import os
+from datetime import timedelta
 from dotenv import load_dotenv
+from werkzeug.security import generate_password_hash, check_password_hash
 
 load_dotenv()
 
@@ -24,4 +26,18 @@ class Config:
         'pdf', 'zip', 'rar', '7z', 'tar', 'gz'
     }
     
-    ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD') or 'admin'
+    # Хэш пароля администратора (по умолчанию 'admin')
+    # Для смены пароля используйте: generate_password_hash('ваш_пароль')
+    ADMIN_PASSWORD_HASH = os.environ.get('ADMIN_PASSWORD_HASH') or \
+        generate_password_hash('admin')
+    
+    # Безопасные настройки сессий
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SECURE = False  # Включить True для HTTPS
+    SESSION_COOKIE_SAMESITE = 'Lax'
+    PERMANENT_SESSION_LIFETIME = timedelta(hours=2)
+    
+    @staticmethod
+    def verify_password(password: str) -> bool:
+        """Проверка пароля против хэша."""
+        return check_password_hash(Config.ADMIN_PASSWORD_HASH, password)
