@@ -1,92 +1,45 @@
-/* ===== ГЛОБАЛЬНЫЕ ЭФФЕКТЫ ===== */
+/* ===== ИНДУСТРИАЛЬНЫЙ СТИЛЬ ===== */
 
-/* Анимированный градиентный фон */
+/* Тёмный технический фон */
 body {
-    background: linear-gradient(-45deg, #0a0a0f, #1a0a2e, #0f1a2e, #1a0a1a, #0a0a0f);
-    background-size: 400% 400%;
-    animation: gradientShift 15s ease infinite;
+    background-color: #0a0a0a;
+    background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
     min-height: 100vh;
+    font-family: 'Courier New', Courier, monospace;
     position: relative;
     overflow-x: hidden;
 }
 
-@keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-/* Звёздный фон с частицами */
-.stars {
+/* Scanline эффект как на старых мониторах */
+body::before {
+    content: '';
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.15),
+        rgba(0, 0, 0, 0.15) 1px,
+        transparent 1px,
+        transparent 2px
+    );
     pointer-events: none;
-    z-index: 0;
-    overflow: hidden;
+    z-index: 9999;
 }
 
-.star {
-    position: absolute;
-    width: 3px;
-    height: 3px;
-    background: white;
-    border-radius: 50%;
-    animation: twinkle var(--duration) ease-in-out infinite;
-    opacity: var(--opacity);
-}
-
-@keyframes twinkle {
-    0%, 100% { opacity: 0.2; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.2); }
-}
-
-/* Плавающие частицы */
-.floating-particles {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 0;
-}
-
-.particle {
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    border-radius: 50%;
-    animation: float var(--float-duration) ease-in-out infinite;
-    opacity: 0.6;
-    filter: blur(1px);
-}
-
-@keyframes float {
-    0%, 100% { 
-        transform: translateY(100vh) rotate(0deg); 
-        opacity: 0;
-    }
-    10% { opacity: 0.6; }
-    90% { opacity: 0.6; }
-    100% { 
-        transform: translateY(-100vh) rotate(720deg); 
-        opacity: 0;
-    }
-}
-
-/* ===== СТЕКЛЯННЫЕ КАРТОЧКИ С НЕОНОМ ===== */
+/* ===== ТЕХНИЧЕСКИЕ КАРТОЧКИ ===== */
 
 .glass-card {
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(20, 20, 20, 0.95);
+    border: 2px solid #333;
     box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        0 0 0 1px #1a1a1a,
+        0 4px 20px rgba(0, 0, 0, 0.8);
     position: relative;
     overflow: hidden;
 }
@@ -95,98 +48,47 @@ body {
     content: '';
     position: absolute;
     top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(102, 126, 234, 0.1),
-        transparent
-    );
-    transition: left 0.7s;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #ff6600, #ff8800, #ff6600);
+    background-size: 200% 100%;
+    animation: warningPulse 2s linear infinite;
 }
 
-.glass-card:hover::before {
-    left: 100%;
+@keyframes warningPulse {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 200% 0%; }
 }
 
 .glass-card:hover {
-    background: rgba(255, 255, 255, 0.06);
-    border-color: rgba(102, 126, 234, 0.3);
+    border-color: #ff6600;
     box-shadow: 
-        0 12px 48px rgba(102, 126, 234, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.15),
-        0 0 60px rgba(102, 126, 234, 0.1);
-    transform: translateY(-4px) scale(1.01);
+        0 0 0 1px #1a1a1a,
+        0 0 30px rgba(255, 102, 0, 0.3),
+        0 8px 40px rgba(0, 0, 0, 0.9);
+    transform: translateY(-2px);
 }
 
-/* ===== НЕОНОВЫЕ КНОПКИ ===== */
-
-.btn-neon {
-    position: relative;
-    overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.btn-neon::before {
+/* Уголки как на технических чертежах */
+.glass-card::after {
     content: '';
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.3);
-    transform: translate(-50%, -50%);
-    transition: width 0.6s, height 0.6s;
-}
-
-.btn-neon:hover::before {
-    width: 300px;
-    height: 300px;
-}
-
-.btn-neon:hover {
-    transform: translateY(-3px);
-    box-shadow: 
-        0 10px 40px rgba(102, 126, 234, 0.4),
-        0 0 80px rgba(118, 75, 162, 0.3),
-        inset 0 0 20px rgba(255, 255, 255, 0.1);
-}
-
-/* ===== ГРАДИЕНТНЫЙ ТЕКСТ С АНИМАЦИЕЙ ===== */
-
-.gradient-text {
-    background: linear-gradient(
-        135deg,
-        #667eea 0%,
-        #764ba2 25%,
-        #f093fb 50%,
-        #667eea 75%,
-        #764ba2 100%
-    );
-    background-size: 300% 300%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: gradientFlow 5s ease infinite;
-    filter: drop-shadow(0 0 20px rgba(102, 126, 234, 0.5));
-}
-
-@keyframes gradientFlow {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    top: 8px;
+    right: 8px;
+    width: 20px;
+    height: 20px;
+    border-top: 2px solid #ff6600;
+    border-right: 2px solid #ff6600;
+    opacity: 0.5;
 }
 
 /* ===== НАВИГАЦИЯ ===== */
 
 .nav-glass {
-    background: rgba(10, 10, 15, 0.7);
-    backdrop-filter: blur(30px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+    background: rgba(10, 10, 10, 0.98);
+    border-bottom: 2px solid #333;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
 }
 
 .nav-glass::after {
@@ -195,35 +97,86 @@ body {
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 1px;
+    height: 2px;
     background: linear-gradient(
         90deg,
         transparent,
-        rgba(102, 126, 234, 0.5),
+        #ff6600,
+        #ff8800,
+        #ff6600,
         transparent
     );
+}
+
+/* ===== ТЕХНИЧЕСКИЙ ТЕКСТ ===== */
+
+.gradient-text {
+    color: #ff6600;
+    text-shadow: 
+        0 0 10px rgba(255, 102, 0, 0.5),
+        0 0 20px rgba(255, 102, 0, 0.3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+/* ===== КНОПКИ ===== */
+
+.btn-neon {
+    background: linear-gradient(180deg, #2a2a2a, #1a1a1a);
+    border: 1px solid #444;
+    color: #ff6600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-neon::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 102, 0, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn-neon:hover::before {
+    left: 100%;
+}
+
+.btn-neon:hover {
+    border-color: #ff6600;
+    box-shadow: 
+        0 0 20px rgba(255, 102, 0, 0.4),
+        inset 0 0 10px rgba(255, 102, 0, 0.1);
+    transform: translateY(-2px);
 }
 
 /* ===== ПОЛЯ ВВОДА ===== */
 
 .input-glass {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    color: white;
-    transition: all 0.3s ease;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid #333;
+    color: #00ff00;
+    font-family: 'Courier New', Courier, monospace;
+    transition: all 0.2s ease;
 }
 
 .input-glass:focus {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(102, 126, 234, 0.6);
+    background: rgba(0, 0, 0, 0.8);
+    border-color: #ff6600;
     outline: none;
     box-shadow: 
-        0 0 30px rgba(102, 126, 234, 0.2),
-        inset 0 0 20px rgba(102, 126, 234, 0.05);
+        0 0 20px rgba(255, 102, 0, 0.3),
+        inset 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .input-glass::placeholder {
-    color: rgba(255, 255, 255, 0.3);
+    color: #555;
 }
 
 /* ===== БЕЙДЖИ ТИПОВ ПОСТОВ ===== */
@@ -232,221 +185,194 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 0;
+    font-size: 10px;
+    font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 1px;
-    position: relative;
-    overflow: hidden;
+    font-family: 'Courier New', Courier, monospace;
+    border: 1px solid;
 }
 
 .post-type-text {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+    background: rgba(100, 100, 100, 0.3);
+    border-color: #888;
+    color: #ccc;
 }
 
 .post-type-link {
-    background: linear-gradient(135deg, #00c6ff, #0072ff);
-    color: white;
-    box-shadow: 0 4px 20px rgba(0, 198, 255, 0.4);
+    background: rgba(0, 100, 200, 0.3);
+    border-color: #0066cc;
+    color: #66b3ff;
 }
 
 .post-type-file {
-    background: linear-gradient(135deg, #11998e, #38ef7d);
-    color: white;
-    box-shadow: 0 4px 20px rgba(17, 153, 142, 0.4);
+    background: rgba(0, 150, 50, 0.3);
+    border-color: #009933;
+    color: #66ff99;
 }
 
-/* ===== АНИМАЦИИ ПОЯВЛЕНИЯ ===== */
+/* ===== АНИМАЦИИ ===== */
 
 @keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(30px) scale(0.95);
+        transform: translateY(20px);
     }
     to {
         opacity: 1;
-        transform: translateY(0) scale(1);
+        transform: translateY(0);
     }
 }
 
 .animate-fade-in {
-    animation: fadeInUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    animation: fadeInUp 0.4s ease-out forwards;
 }
 
 .animate-fade-in-delay-1 { animation-delay: 0.1s; }
 .animate-fade-in-delay-2 { animation-delay: 0.2s; }
 .animate-fade-in-delay-3 { animation-delay: 0.3s; }
 
-/* ===== ПУЛЬСИРУЮЩИЕ ЭЛЕМЕНТЫ ===== */
-
-@keyframes pulse-glow {
-    0%, 100% {
-        box-shadow: 
-            0 0 20px rgba(102, 126, 234, 0.3),
-            0 0 40px rgba(118, 75, 162, 0.2);
-    }
-    50% {
-        box-shadow: 
-            0 0 40px rgba(102, 126, 234, 0.6),
-            0 0 80px rgba(118, 75, 162, 0.4);
-    }
-}
-
-.pulse-glow {
-    animation: pulse-glow 3s ease-in-out infinite;
-}
-
 /* ===== СКРОЛЛБАР ===== */
 
 ::-webkit-scrollbar {
-    width: 10px;
+    width: 12px;
 }
 
 ::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.02);
+    background: #0a0a0a;
+    border-left: 1px solid #222;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, #667eea, #764ba2);
-    border-radius: 5px;
-    border: 2px solid rgba(10, 10, 15, 0.5);
+    background: linear-gradient(180deg, #333, #222);
+    border: 2px solid #0a0a0a;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, #764ba2, #f093fb);
+    background: linear-gradient(180deg, #ff6600, #cc5500);
 }
 
 /* ===== РАЗДЕЛИТЕЛЬ ===== */
 
 .divider-glow {
-    height: 1px;
+    height: 2px;
     background: linear-gradient(
         90deg,
         transparent,
-        rgba(102, 126, 234, 0.4),
-        rgba(118, 75, 162, 0.4),
+        #333,
+        #ff6600,
+        #333,
         transparent
     );
-}
-
-/* ===== ЭФФЕКТ PARALLAX ДЛЯ ЗАГОЛОВКА ===== */
-
-.parallax-title {
-    transform-style: preserve-3d;
-    perspective: 1000px;
-}
-
-/* ===== ДОПОЛНИТЕЛЬНЫЕ ЭФФЕКТЫ ===== */
-
-.glow-orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
-    opacity: 0.3;
-    animation: orbFloat 20s ease-in-out infinite;
-}
-
-@keyframes orbFloat {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(30px, -30px) scale(1.1); }
-    66% { transform: translate(-20px, 20px) scale(0.9); }
 }
 
 /* ===== КНОПКА УДАЛЕНИЯ ===== */
 
 .btn-delete {
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
 }
 
 .btn-delete:hover {
-    background: rgba(239, 68, 68, 0.2);
-    color: #ef4444;
-    box-shadow: 0 0 30px rgba(239, 68, 68, 0.3);
-    transform: scale(1.1);
+    background: rgba(255, 50, 50, 0.2);
+    color: #ff3333;
+    border-color: #ff3333;
+    box-shadow: 0 0 15px rgba(255, 50, 50, 0.3);
 }
 
 /* ===== КНОПКА СКАЧИВАНИЯ ===== */
 
 .btn-download {
-    position: relative;
-    overflow: hidden;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.btn-download::after {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(
-        45deg,
-        transparent,
-        rgba(255, 255, 255, 0.1),
-        transparent
-    );
-    transform: rotate(45deg);
-    transition: all 0.6s;
-}
-
-.btn-download:hover::after {
-    left: 100%;
+    background: linear-gradient(180deg, #1a2a1a, #0a1a0a);
+    border: 1px solid #006633;
+    color: #66ff99;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
+    transition: all 0.2s ease;
 }
 
 .btn-download:hover {
+    background: linear-gradient(180deg, #2a3a2a, #1a2a1a);
+    border-color: #00ff66;
+    box-shadow: 0 0 20px rgba(0, 255, 102, 0.3);
     transform: translateY(-2px);
-    box-shadow: 
-        0 10px 40px rgba(56, 239, 125, 0.3),
-        0 0 60px rgba(17, 153, 142, 0.2);
 }
 
-/* ===== АНИМАЦИЯ ИКОНОК ===== */
+/* ===== ИНДИКАТОРЫ ===== */
 
-.icon-bounce {
-    display: inline-block;
-    animation: iconBounce 2s ease-in-out infinite;
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    background: #00ff00;
+    border-radius: 0;
+    animation: blink 1s step-end infinite;
 }
 
-@keyframes iconBounce {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    25% { transform: translateY(-3px) rotate(-5deg); }
-    75% { transform: translateY(-3px) rotate(5deg); }
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
 }
 
-/* ===== СПЕЦИАЛЬНЫЕ ЭФФЕКТЫ ДЛЯ КАРТОЧЕК ===== */
+/* ===== ДЕКОРАТИВНЫЕ ЛИНИИ ===== */
 
-.card-glow {
+.tech-lines {
     position: relative;
 }
 
-.card-glow::after {
+.tech-lines::before {
     content: '';
     position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
-    background: linear-gradient(
-        45deg,
-        #667eea,
-        #764ba2,
-        #f093fb,
-        #667eea
-    );
-    background-size: 400% 400%;
-    z-index: -1;
-    border-radius: inherit;
-    opacity: 0;
-    transition: opacity 0.4s;
-    animation: gradientFlow 5s ease infinite;
-    filter: blur(10px);
+    top: 0;
+    left: 20px;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(180deg, transparent, #333, transparent);
 }
 
-.card-glow:hover::after {
-    opacity: 0.5;
+.tech-lines::after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #333, transparent);
+}
+
+/* ===== HEX ПАТЕРН ===== */
+
+.hex-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23ff6600' fill-opacity='0.05'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* ===== CRT ЭФФЕКТ ===== */
+
+@keyframes flicker {
+    0% { opacity: 0.97; }
+    5% { opacity: 0.95; }
+    10% { opacity: 0.9; }
+    15% { opacity: 0.95; }
+    20% { opacity: 0.99; }
+    50% { opacity: 0.95; }
+    80% { opacity: 0.98; }
+    100% { opacity: 0.97; }
+}
+
+.crt-flicker {
+    animation: flicker 0.15s infinite;
+}
+
+/* ===== WARNING STRIPES ===== */
+
+.warning-stripes {
+    background: repeating-linear-gradient(
+        45deg,
+        #1a1a1a,
+        #1a1a1a 10px,
+        #222 10px,
+        #222 20px
+    );
 }

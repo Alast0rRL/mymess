@@ -1,96 +1,80 @@
 {% extends "base.html" %}
 
-{% block title %}Вход — Сайт Макса{% endblock %}
+{% block title %}LOGIN — Сайт Макса{% endblock %}
 
 {% block content %}
-<div class="min-h-[65vh] flex items-center justify-center">
-    <div class="w-full max-w-lg">
+<div class="min-h-[60vh] flex items-center justify-center">
+    <div class="w-full max-w-md">
         <!-- Карточка входа -->
-        <div class="glass-card rounded-3xl p-10 animate-fade-in card-glow relative overflow-hidden">
-            <!-- Декоративный фон -->
-            <div class="absolute inset-0 opacity-30">
-                <div class="absolute top-0 right-0 w-64 h-64 bg-purple-500/20 rounded-full filter blur-3xl"></div>
-                <div class="absolute bottom-0 left-0 w-64 h-64 bg-pink-500/20 rounded-full filter blur-3xl"></div>
+        <div class="glass-card p-8 animate-fade-in relative">
+            <!-- Декоративные элементы -->
+            <div class="absolute top-0 left-0 w-16 h-16 border-l-2 border-t-2 border-orange-500/30"></div>
+            <div class="absolute top-0 right-0 w-16 h-16 border-r-2 border-t-2 border-orange-500/30"></div>
+            <div class="absolute bottom-0 left-0 w-16 h-16 border-l-2 border-b-2 border-orange-500/30"></div>
+            <div class="absolute bottom-0 right-0 w-16 h-16 border-r-2 border-b-2 border-orange-500/30"></div>
+            
+            <!-- Иконка замка -->
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-20 h-20 border-2 border-orange-500/30 bg-black/30 mb-4">
+                    <svg class="w-10 h-10 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                </div>
+                <h1 class="text-2xl font-bold text-orange-500 mb-2 font-mono">
+                    [ADMIN_AUTHENTICATION]
+                </h1>
+                <p class="text-gray-600 text-xs font-mono">
+                    ENTER CREDENTIALS TO ACCESS SYSTEM
+                </p>
             </div>
             
-            <div class="relative z-10">
-                <!-- Иконка замка с анимацией -->
-                <div class="text-center mb-10">
-                    <div class="inline-flex items-center justify-center w-28 h-28 rounded-full bg-gradient-to-br from-purple-500/30 to-pink-500/30 border-2 border-purple-400/40 mb-6 pulse-glow relative">
-                        <!-- Орбиты вокруг замка -->
-                        <div class="absolute inset-0 rounded-full border border-purple-400/20 animate-spin" style="animation-duration: 10s;"></div>
-                        <div class="absolute inset-2 rounded-full border border-pink-400/20 animate-spin" style="animation-duration: 7s; animation-direction: reverse;"></div>
-                        <svg class="w-12 h-12 text-purple-300 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                        </svg>
+            <!-- Форма -->
+            <form method="POST" action="{{ url_for('login') }}" class="space-y-6">
+                <div>
+                    <label for="password" class="block text-xs font-mono text-gray-500 mb-2">
+                        >> ENTER_PASSWORD
+                    </label>
+                    <div class="relative">
+                        <input type="password" 
+                            id="password" 
+                            name="password" 
+                            required
+                            autofocus
+                            class="w-full px-4 py-4 pl-4 font-mono text-lg tracking-widest input-glass text-center"
+                            placeholder="••••••••">
                     </div>
-                    <h1 class="text-3xl font-bold gradient-text mb-3">
-                        Вход для администратора
-                    </h1>
-                    <p class="text-gray-400 text-base">
-                        Введите пароль для доступа к управлению сайтом
-                    </p>
                 </div>
                 
-                <!-- Форма -->
-                <form method="POST" action="{{ url_for('login') }}" class="space-y-7">
-                    <div>
-                        <label for="password" class="block text-sm font-medium text-purple-300 mb-3 flex items-center gap-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                            </svg>
-                            Пароль
-                        </label>
-                        <div class="relative group">
-                            <input type="password" 
-                                id="password" 
-                                name="password" 
-                                required
-                                autofocus
-                                class="w-full px-6 py-5 pl-14 rounded-2xl input-glass text-xl tracking-widest"
-                                placeholder="••••••••">
-                            <div class="absolute left-5 top-1/2 -translate-y-1/2 text-purple-400 group-focus-within:animate-pulse">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
-                                </svg>
-                            </div>
-                            <!-- Glow эффект при фокусе -->
-                            <div class="absolute inset-0 rounded-2xl border-2 border-transparent group-focus-within:border-purple-500/50 pointer-events-none transition-colors"></div>
-                        </div>
-                    </div>
-                    
-                    <button type="submit" 
-                        class="btn-neon btn-glow w-full px-8 py-5 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 text-white font-bold rounded-2xl hover:from-purple-600 hover:via-pink-600 hover:to-purple-600 transition-all shadow-2xl shadow-purple-500/40 text-xl flex items-center justify-center gap-3 group">
-                        <span class="text-2xl group-hover:scale-110 transition-transform">🔐</span>
-                        <span>Войти в систему</span>
-                        <svg class="w-6 h-6 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-                        </svg>
-                    </button>
-                </form>
-                
-                <!-- Ссылка назад -->
-                <div class="mt-10 pt-8 border-t border-white/10 text-center">
-                    <a href="{{ url_for('index') }}" class="inline-flex items-center gap-3 text-sm text-gray-400 hover:text-purple-300 transition-colors group">
-                        <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                        </svg>
-                        <span>Вернуться к ленте публикаций</span>
-                    </a>
-                </div>
+                <button type="submit" 
+                    class="btn-neon w-full px-6 py-4 font-mono text-sm font-bold tracking-wider">
+                    [AUTHENTICATE]
+                </button>
+            </form>
+            
+            <!-- Ссылка назад -->
+            <div class="mt-8 pt-6 border-t border-gray-800 text-center">
+                <a href="{{ url_for('index') }}" class="inline-flex items-center gap-2 text-xs text-gray-600 hover:text-orange-500 transition-colors font-mono">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    [RETURN_TO_FEED]
+                </a>
             </div>
         </div>
         
-        <!-- Декоративный элемент -->
-        <div class="text-center mt-10">
-            <p class="text-xs text-gray-600 flex items-center justify-center gap-2">
-                <span class="icon-bounce">🔒</span>
-                Безопасный вход в систему
-                <span class="icon-bounce" style="animation-delay: -0.5s">🔒</span>
-            </p>
-            <p class="text-xs text-gray-700 mt-3">
-                ✦ Сайт Макса — приватный доступ
-            </p>
+        <!-- Статус бар -->
+        <div class="mt-6 p-4 bg-black/30 border border-gray-800 font-mono text-xs text-center">
+            <div class="flex items-center justify-center gap-4 text-gray-600">
+                <span class="flex items-center gap-2">
+                    <span class="w-2 h-2 bg-green-500 status-indicator"></span>
+                    SECURE_CONNECTION
+                </span>
+                <span>|</span>
+                <span>ENCRYPTION: ACTIVE</span>
+            </div>
+            <div class="mt-2 text-gray-700">
+                ⚠️ UNAUTHORIZED_ACCESS_IS_PROHIBITED
+            </div>
         </div>
     </div>
 </div>
