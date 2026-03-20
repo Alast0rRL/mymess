@@ -115,10 +115,11 @@ def create_app(config_class=Config):
         
         db.session.delete(post)
         db.session.commit()
-        
+
         if request.headers.get('HX-Request'):
-            return '', 204
-        
+            # Возвращаем пустой ответ для HTMX
+            return ''
+
         flash('Пост удален', 'success')
         return redirect(url_for('index'))
     
