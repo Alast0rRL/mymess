@@ -39,6 +39,50 @@
 </div>
 {% endif %}
 
+<!-- Поиск и фильтры -->
+<div class="glass-card p-4 mb-6 animate-fade-in-delay-1">
+    <form method="GET" action="{{ url_for('index') }}" class="flex flex-wrap gap-3 items-end">
+        <div class="flex-1 min-w-[200px]">
+            <label class="block text-xs font-medium text-gray-600 mb-1">🔍 Поиск</label>
+            <input type="text" name="search" value="{{ search or '' }}" 
+                placeholder="Текст поста..." 
+                class="w-full input-clean text-sm py-2">
+        </div>
+        
+        <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1">Тип</label>
+            <select name="type" class="input-clean text-sm py-2">
+                <option value="">Все типы</option>
+                <option value="text" {{ 'selected' if current_type == 'text' }}>📄 Текст</option>
+                <option value="link" {{ 'selected' if current_type == 'link' }}>🔗 Ссылка</option>
+                <option value="image" {{ 'selected' if current_type == 'image' }}>🖼️ Изображение</option>
+                <option value="video" {{ 'selected' if current_type == 'video' }}>🎬 Видео</option>
+                <option value="file" {{ 'selected' if current_type == 'file' }}>📦 Файл</option>
+            </select>
+        </div>
+        
+        <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1">Сортировка</label>
+            <select name="sort" class="input-clean text-sm py-2">
+                <option value="newest" {{ 'selected' if current_sort == 'newest' }}>Сначала новые</option>
+                <option value="oldest" {{ 'selected' if current_sort == 'oldest' }}>Сначала старые</option>
+                <option value="type" {{ 'selected' if current_sort == 'type' }}>По типу</option>
+            </select>
+        </div>
+        
+        <div class="flex gap-2">
+            <button type="submit" class="btn-primary text-sm py-2 px-4">
+                Применить
+            </button>
+            {% if search or current_type or current_sort == 'oldest' or current_sort == 'type' %}
+            <a href="{{ url_for('index') }}" class="btn-secondary text-sm py-2 px-4">
+                Сброс
+            </a>
+            {% endif %}
+        </div>
+    </form>
+</div>
+
 <!-- Заголовок ленты -->
 <div class="flex items-center justify-between mb-6 animate-fade-in-delay-1">
     <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
@@ -78,18 +122,25 @@
                     </span>
                 </div>
                 
-                <!-- Кнопка удаления (только админ) -->
+                <!-- Кнопки управления (только админ) -->
                 {% if is_admin %}
-                <button 
-                    hx-post="{{ url_for('delete_post', post_id=post.id) }}"
-                    hx-confirm="Удалить эту запись?"
-                    hx-target="closest article"
-                    hx-swap="outerHTML"
-                    hx-trigger="click"
-                    class="btn-danger text-sm"
-                    title="Удалить">
-                    ✕
-                </button>
+                <div class="flex items-center gap-2">
+                    <a href="{{ url_for('edit_post', post_id=post.id) }}" 
+                        class="text-blue-600 hover:text-blue-800 text-sm px-3 py-1 hover:bg-blue-50 rounded transition-colors"
+                        title="Редактировать">
+                        ✏️
+                    </a>
+                    <button 
+                        hx-post="{{ url_for('delete_post', post_id=post.id) }}"
+                        hx-confirm="Удалить эту запись?"
+                        hx-target="closest article"
+                        hx-swap="outerHTML"
+                        hx-trigger="click"
+                        class="text-red-600 hover:text-red-800 text-sm px-3 py-1 hover:bg-red-50 rounded transition-colors"
+                        title="Удалить">
+                        ✕
+                    </button>
+                </div>
                 {% endif %}
             </div>
             
@@ -171,6 +222,29 @@
         </div>
     {% endif %}
 </div>
+
+<!-- Пагинация -->
+{% if pagination and pagination.pages > 1 %}
+<div class="mt-8 flex justify-center items-center gap-2">
+    {% if pagination.has_prev %}
+    <a href="?page={{ pagination.prev_num }}{% if search %}&search={{ search }}{% endif %}{% if current_type %}&type={{ current_type }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}" 
+        class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
+        ← Назад
+    </a>
+    {% endif %}
+    
+    <span class="px-4 py-2 text-sm text-gray-600">
+        Страница {{ pagination.page }} из {{ pagination.pages }}
+    </span>
+    
+    {% if pagination.has_next %}
+    <a href="?page={{ pagination.next_num }}{% if search %}&search={{ search }}{% endif %}{% if current_type %}&type={{ current_type }}{% endif %}{% if current_sort %}&sort={{ current_sort }}{% endif %}" 
+        class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors">
+        Вперед →
+    </a>
+    {% endif %}
+</div>
+{% endif %}
 
 <script>
 document.getElementById('fileInput')?.addEventListener('change', function(e) {

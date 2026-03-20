@@ -134,12 +134,56 @@ def create_app(config_class=Config):
     @app.route('/')
     def index():
         try:
-            posts = Post.query.order_by(Post.created_at.desc()).all()
-            return render_template('index.html', posts=posts)
+            # Пагинация
+            page = request.args.get('page', 1, type=int)
+            per_page = 20
+            
+            # Поиск
+            search = request.args.get('search', '').strip()
+            
+            # Фильтр по типу
+            post_type = request.args.get('type', '').strip()
+            
+            # Сортировка
+            sort = request.args.get('sort', 'newest')
+            
+            # Базовый запрос
+            query = Post.query
+            
+            # Применяем поиск
+            if search:
+                query = query.filter(Post.content.ilike(f'%{search}%'))
+            
+            # Применяем фильтр по типу
+            if post_type and post_type != 'all':
+                query = query.filter(Post.type == post_type)
+            
+            # Применяем сортировку
+            if sort == 'oldest':
+                query = query.order_by(Post.created_at.asc())
+            elif sort == 'type':
+                query = query.order_by(Post.type.asc(), Post.created_at.desc())
+            else:  # newest
+                query = query.order_by(Post.created_at.desc())
+            
+            posts = query.paginate(
+                page=page, 
+                per_page=per_page, 
+                error_out=False
+            )
+            
+            return render_template(
+                'index.html', 
+                posts=posts.items, 
+                pagination=posts,
+                search=search,
+                current_type=post_type,
+                current_sort=sort
+            )
         except Exception as e:
             app.logger.error(f'Error fetching posts: {e}')
             flash('Ошибка при загрузке ленты', 'error')
-            return render_template('index.html', posts=[])
+            return render_template('index.html', posts=[], pagination=None)
     
     @app.route('/login', methods=['GET', 'POST'])
     def login():
@@ -248,6 +292,47 @@ def create_app(config_class=Config):
             app.logger.error(f'Error deleting post {post_id}: {e}')
             flash('Ошибка при удалении поста', 'error')
             return redirect(url_for('index'))
+    
+    @app.route('/edit/<int:post_id>', methods=['GET', 'POST'])
+    @login_required
+    def edit_post(post_id):
+        post = Post.query.get_or_404(post_id)
+        
+        if request.method == 'POST':
+            try:
+                content = request.form.get('content', '').strip()
+                file = request.files.get('file')
+                
+                # Обновляем контент
+                post.content = content
+                
+                # Если загружен новый файл
+                if file and file.filename:
+                    # Удаляем старый файл
+                    if post.file_path:
+                        old_path = os.path.join(app.config['UPLOAD_FOLDER'], post.file_path)
+                        if os.path.exists(old_path):
+                            os.remove(old_path)
+                    
+                    # Сохраняем новый
+                    filename = secure_filename(file.filename)
+                    unique_filename = generate_unique_filename(filename)
+                    file.save(os.path.join(app.config['UPLOAD_FOLDER'], unique_filename))
+                    post.file_path = unique_filename
+                    post.type = get_file_type(filename)
+                    app.logger.info(f'File updated for post {post_id}: {unique_filename}')
+                
+                db.session.commit()
+                app.logger.info(f'Post updated: ID={post_id}')
+                flash('Пост обновлен', 'success')
+                return redirect(url_for('index'))
+                
+            except Exception as e:
+                db.session.rollback()
+                app.logger.error(f'Error updating post {post_id}: {e}')
+                flash('Ошибка при обновлении поста', 'error')
+        
+        return render_template('edit.html', post=post)
     
     @app.context_processor
     def inject_is_admin():
