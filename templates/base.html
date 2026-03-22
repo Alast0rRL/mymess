@@ -20,7 +20,7 @@
     </style>
     {% block extra_css %}{% endblock %}
 </head>
-<body>
+<body data-is-admin="{{ 'true' if is_admin else 'false' }}">
     <!-- Навигация -->
     <nav class="nav-glass fixed w-full top-0 z-50">
         <div class="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
@@ -63,18 +63,7 @@
         {% block content %}{% endblock %}
     </main>
 
-    <!-- Футер -->
-    <footer class="footer-clean py-8">
-        <div class="max-w-5xl mx-auto px-6 text-center">
-            <p class="text-gray-600 text-sm">
-                © 2026 Сайт Макса. Все права защищены.
-            </p>
-            <p class="text-gray-400 text-xs mt-1">
-                Инженерный блог • Чертежи • Проекты
-            </p>
-        </div>
-    </footer>
-
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>
